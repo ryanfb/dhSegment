@@ -58,4 +58,45 @@ cd ..
 5. Run `python demo.py`
 6. Have a look at the results in `demo/processed_images`
 
+## MicroPasts Photogrammetry Masking
 
+### Training from scratch:
+
+Download and extract the [MicroPasts / British Museum Photogrammetry Masking Dataset 1.0](https://archive.org/details/micropasts_masking_dataset_10): (**WARNING: 26GB**)
+```
+wget https://archive.org/download/micropasts_masking_dataset_10/micropasts_masking_dataset_10.zip
+```
+
+Split the images into train/val/test sets so that you wind up with the following directories:
+```
+micropasts/micropasts/train/images/
+micropasts/micropasts/train/labels/
+micropasts/micropasts/val_a1/images/
+micropasts/micropasts/val_a1/labels/
+micropasts/micropasts/test_a1/images/
+micropasts/micropasts/test_a1/labels/
+```
+
+For the existing training below, a train/val/test split of 80/10/10 was used, i.e. 3773 image pairs for train, 471 image pairs for each of val and test. The exact filenames used for each in the existing training can be found [in these text files](https://gist.github.com/ryanfb/261472dbcd01c556be437c032fb089db) if desired.
+
+For training from scratch, download the pretrained weights for ResNet :
+```
+cd pretrained_models/
+python download_resnet_pretrained_model.py
+cd ..
+```
+Then run: `python train.py with micropasts/micropasts_config.json`
+
+### Using the existing model:
+
+Download the [provided model](https://github.com/ryanfb/dhSegment/releases/download/micropastsv1/micropasts_model.zip) and unzip it in `micropasts/` (so there's a resulting directory `micropasts/micropasts_model`).
+```
+cd micropasts/
+wget https://github.com/ryanfb/dhSegment/releases/download/micropastsv1/micropasts_model.zip
+unzip micropasts_model.zip
+cd ..
+```
+
+### Testing a trained model
+
+Put images in `micropasts/micropasts/test_a1/images`. Run `python demo_micropasts.py`. Results will be in `micropasts/processed_images`.
